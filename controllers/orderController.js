@@ -28,3 +28,13 @@ exports.checkout = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getOrderHistory = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 }).populate('items.productId');
+    res.json(orders);
+  } catch (err) {
+    next(err);
+  }
+};
